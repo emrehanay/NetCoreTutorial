@@ -30,6 +30,7 @@ namespace NetCoreTutorial
 
         public IConfiguration Configuration { get; }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddNewtonsoftJson(options =>
@@ -50,6 +51,9 @@ namespace NetCoreTutorial
 
             services.AddScoped<IJwtHelper, JwtHelper>();
 
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IPostTagService, PostTagService>();
+            services.AddScoped<ITagService, TagService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
             services.AddScoped(typeof(GenericBaseEntityRepository<>));

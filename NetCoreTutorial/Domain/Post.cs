@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace NetCoreTutorial.Domain
 {
-    public class User : IBaseEntity
+    public class Post : IBaseEntity
     {
         public long Id { get; set; }
         public int Status { get; set; }
@@ -12,9 +11,11 @@ namespace NetCoreTutorial.Domain
         public DateTime? UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
 
-        public string Username { get; set; }
-        public string Email { get; set; }
-        [JsonIgnore] public string PasswordHash { get; set; }
-        [JsonIgnore] public IEnumerable<Post> Posts { get; set; }
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public long UserId { get; set; }
+
+        public User User { get; set; }
+        public IEnumerable<PostTag> PostTags { get; set; }
     }
 }

@@ -8,6 +8,9 @@ namespace NetCoreTutorial.Repository
 {
     public class MainContext : DbContext
     {
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<PostTag> PostTags { get; set; }
         public DbSet<User> Users { get; set; }
 
         public MainContext(DbContextOptions<MainContext> options) : base(options)
@@ -21,7 +24,28 @@ namespace NetCoreTutorial.Repository
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Post>().HasQueryFilter(m => EF.Property<bool>(m, "IsDeleted") == false);
+            modelBuilder.Entity<Tag>().HasQueryFilter(m => EF.Property<bool>(m, "IsDeleted") == false);
             modelBuilder.Entity<User>().HasQueryFilter(m => EF.Property<bool>(m, "IsDeleted") == false);
+
+
+            modelBuilder.Entity<Post>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.Posts)
+                .HasForeignKey(x => x.UserId);
+
+            modelBuilder.Entity<PostTag>()
+                .HasKey(x => new {x.PostId, x.TagId});
+
+            modelBuilder.Entity<PostTag>()
+                .HasOne(x => x.Post)
+                .WithMany(x => x.PostTags)
+                .HasForeignKey(x => x.PostId);
+
+            modelBuilder.Entity<PostTag>()
+                .HasOne(x => x.Tag)
+                .WithMany(x => x.PostTags)
+                .HasForeignKey(x => x.TagId);
         }
 
         public override int SaveChanges()
